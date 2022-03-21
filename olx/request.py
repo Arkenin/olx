@@ -6,7 +6,18 @@ from bs4 import BeautifulSoup
 
 url = 'https://www.olx.pl/sport-hobby/rowery/krakow/?search%5Bfilter_float_price%3Afrom%5D=20'
 
+def encode_url():
+    pass
+
+def decode_url():
+    pass
+
 def build_olx_url():
+    # check https://www.w3schools.com/tags/ref_urlencode.asp
+    '''
+
+    '''
+    base = 'https://www.olx.pl/'
     category = ''
     filters = {}
     localization = ''
