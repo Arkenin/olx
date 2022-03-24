@@ -1,6 +1,6 @@
 import pytest
 
-from project_name.main import func
+from olx.main import func
 
 
 def test_func():   

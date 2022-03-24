@@ -19,4 +19,4 @@ class Offer():
         pass
 
     def __repr__(self):
-        print(f'{self.date:12}\t{self.price:10}{self.delivery}\t{self.title}')
+        return f'{self.date:12}\t{self.price:10}{self.delivery}\t{self.title}'

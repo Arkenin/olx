@@ -86,8 +86,8 @@ data = {
     'courier':1,
 }
 
-#Debug
-url = build_olx_url(search = 'piłka', category = '', subcategory = '', subsubcategory = '', localization = 'krakow', data = data, page = 2232)
-print(url)
-print_offers(url)
+# #Debug
+# url = build_olx_url(search = 'piłka', category = '', subcategory = '', subsubcategory = '', localization = 'krakow', data = data, page = 2232)
+# print(url)
+# print_offers(url)
 
