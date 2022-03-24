@@ -1,0 +1,11 @@
+
+    EXAMPLES
+    https://www.olx.pl/sport-hobby/rowery/bmx/?search%5Bfilter_float_price%3Afrom%5D=20&search%5Bfilter_float_price%3Ato%5D=50&search%5Bfilter_enum_state%5D%5B0%5D=used&search%5Bphotos%5D=1&search%5Bdescription%5D=1
+    https://www.olx.pl/sport-hobby/rowery/bmx/?search[filter_float_price:from]=20&search[filter_float_price:to]=50&search[filter_enum_state][0]=used&search[photos]=1&search[description]=1
+    
+    data filers: 
+    filter_float_price:from
+    filter_float_price:to
+    description
+    courier
+    https://www.olx.pl/krakow/q-pi%C5%82ka/?search%5Bfilter_float_price%3Afrom%5D=10&search%5Bfilter_float_price%3Ato%5D=100&page=2
