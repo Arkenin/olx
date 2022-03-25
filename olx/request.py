@@ -53,6 +53,7 @@ def get_olx_soup(url):
 def get_offers_from_olx_soup(soup):
     try:   
         offer_table = soup.find('table',{'summary':'Ogłoszenia'}).find_all('tr', {'class':'wrap'})
+        max_page = int(soup.find('a', {'data-cy':'page-link-last'}).text.strip())
         print("Znaleziono {} ofert".format(len(offer_table)))
     except:
         print('Niespodziewana zawartość strony')
