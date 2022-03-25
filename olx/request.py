@@ -27,8 +27,10 @@ def build_olx_url(search = '', category = '', subcategory = '', subsubcategory =
         if page:
             data_part += f'page={page}'
     if search:
-        search = requests.utils.quote(search)
+        search = search
         search = f'q-{search}'
+    if not category:
+        category = 'oferty'
     main_parts = [category, subcategory, subsubcategory, localization, search, data_part]
     for part in main_parts:
         if part:
@@ -58,8 +60,14 @@ def get_offers_from_olx_soup(soup):
     return offer_table
 
 def get_price_from_string(text):
+    if 'darmo' in text:
+        return 0
     pattern = re.compile('[0-9]+(.[0-9]+)?')
-    return float(pattern.search(text)[0])
+    try:
+        price = float(pattern.search(text)[0])
+    except:
+        return -1
+    return price
 
 def get_data_from_olx_offer(offer):    
     date = offer.find('i', {'data-icon':'clock'}).parent.text
@@ -78,13 +86,6 @@ def get_data_from_olx_offer(offer):
     }
     return data
 
-
-
-data = {
-    'filter_float_price:from':10,
-    'filter_float_price:to':100,
-    'courier':1,
-}
 
 # #Debug
 # url = build_olx_url(search = 'piłka', category = '', subcategory = '', subsubcategory = '', localization = 'krakow', data = data, page = 2232)
