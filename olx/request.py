@@ -5,13 +5,131 @@ import requests
 from bs4 import BeautifulSoup
 
 
-url = 'https://www.olx.pl/sport-hobby/rowery/krakow/?search%5Bfilter_float_price%3Afrom%5D=20'
+def build_olx_url(search = '', category = '', subcategory = '', subsubcategory = '', localization = '', data = None, page = None):
+    '''Function for building olx adress with selected categiries, filters and other settings'''
 
-def encode_url():
-    pass
+    base = 'https://www.olx.pl/'
+    url = ''
+    data_part = ''
+    if data or page:
+        data_part = '?'
+        for key, value in data.items():
+            data_part += f'search[{key}]={value}&'
+            #data_part += requests.utils.quote(f'search[{key}]') + f"={value}&"
+        if page:
+            data_part += f'page={page}'
+    if search:
+        search = search
+        search = f'q-{search}'
+    if not category:
+        category = 'oferty'
+    main_parts = [category, subcategory, subsubcategory, localization, search, data_part]
+    for part in main_parts:
+        if part:
+            part = f'{part}/'
+            url += part
+    else:
+        url = url.rstrip('&/')
+    url = base + url
+    return url
 
-def decode_url():
-    pass
+def get_price_from_string(text):
+    if 'darmo' in text:
+        return 0
+    text = text.replace(' ', '').replace(',', '.')
+    pattern = re.compile('[0-9]+(.[0-9]+)?')
+    try:
+        price = float(pattern.search(text)[0])
+    except:
+        return -1
+    return price
+
+
+class OlxHandler():
+
+    def __init__(self, search = '', category = '', subcategory = '', subsubcategory = '', localization = '', act_page = None):
+        self.search = search
+        self.category = category
+        self.subcategory = subcategory
+        self.subsubcategory = subsubcategory
+        self.localization = localization
+
+        self.max_page = 0
+        self.act_page = act_page
+        self.data = dict()
+        self.offers = []
+        self.soup = None
+        self.errors = []
+
+        self.update_url()
+        self.get_soup()
+        self._get_offers_from_olx_soup()
+
+    def __repr__(self) -> str:
+        return f"OlxHandler('{self.search}', '{self.category}', '{self.subcategory}', act_page = {self.act_page})"
+
+    def update_url(self):
+        self.url = build_olx_url(self.search, self.category, self.subcategory, self.subsubcategory, self.localization, self.data, self.act_page)
+    
+    def get_soup(self):
+        self.update_url()
+        r = requests.get(self.url)
+        try:
+            soup = BeautifulSoup(r.content, 'html.parser')
+        except:
+            print(f'Problem z uzyskaniem danych strony, {r.status_code}')
+            return -1
+        self.soup = soup
+        return soup
+
+    def get_offers(self):
+        self.get_soup()
+        table = self._get_offers_from_olx_soup()
+        for offer in table:
+            offer_data = self._get_data_from_olx_offer(offer)
+            self.offers.append(offer_data)
+
+    def clear_offers(self):
+        self.offers.clear()
+
+    def _get_offers_from_olx_soup(self):
+        try:   
+            offer_table = self.soup.find('table',{'summary':'Ogłoszenia'}).find_all('tr', {'class':'wrap'})
+            self.max_page = int(self.soup.find('a', {'data-cy':'page-link-last'}).text.strip())
+            print("Znaleziono {} ofert na stronie: {}".format((len(offer_table)), self.url))
+        except Exception as e:
+            error_msg = f'Niespodziewana zawartość strony: {str(e)}'
+            print(error_msg)
+            self.errors.append(error_msg)
+            return -1
+        return offer_table
+
+
+
+    def _get_data_from_olx_offer(self, offer):    
+        date = offer.find('i', {'data-icon':'clock'}).parent.text
+        title = offer.strong.text
+        try:
+            price = offer.find('p', {'class':'price'}).text.strip()
+            price = get_price_from_string(price)
+        except:
+            price = -1
+
+        if offer.find('div', {'class':'olx-delivery-icon'}):
+            delivery = True
+        else:
+            delivery = False
+        data = {
+            'date':date,
+            'title':title,
+            'price':price,
+            'delivery':delivery,
+        }
+        return data
+
+    def save_soup_to_file(self):
+        with open("data/soup.html", mode='w', encoding = self.soup.original_encoding) as f:
+            f.write(str(self.soup))
 
 def build_olx_url(search = '', category = '', subcategory = '', subsubcategory = '', localization = '', data = None, page = None):
     '''Function for building olx adress with selected categiries, filters and other settings'''
@@ -42,7 +160,7 @@ def build_olx_url(search = '', category = '', subcategory = '', subsubcategory =
     return url 
 
 def get_olx_soup(url):
-    r = requests.get(url)
+    r = requests.get(url, timeout = 2.5)
     try:
         soup = BeautifulSoup(r.content, 'html.parser')
     except:
@@ -60,15 +178,7 @@ def get_offers_from_olx_soup(soup):
         return -1
     return offer_table
 
-def get_price_from_string(text):
-    if 'darmo' in text:
-        return 0
-    pattern = re.compile('[0-9]+(.[0-9]+)?')
-    try:
-        price = float(pattern.search(text)[0])
-    except:
-        return -1
-    return price
+
 
 def get_data_from_olx_offer(offer):    
     date = offer.find('i', {'data-icon':'clock'}).parent.text
@@ -86,10 +196,4 @@ def get_data_from_olx_offer(offer):
         'delivery':delivery,
     }
     return data
-
-
-# #Debug
-# url = build_olx_url(search = 'piłka', category = '', subcategory = '', subsubcategory = '', localization = 'krakow', data = data, page = 2232)
-# print(url)
-# print_offers(url)
 
