@@ -61,18 +61,20 @@ class OlxHandler():
         self.soup = None
         self.errors = []
 
-        self.update_url()
+        #self.update_url()
         self.get_soup()
         self._get_offers_from_olx_soup()
 
     def __repr__(self) -> str:
         return f"OlxHandler('{self.search}', '{self.category}', '{self.subcategory}', act_page = {self.act_page})"
 
-    def update_url(self):
-        self.url = build_olx_url(self.search, self.category, self.subcategory, self.subsubcategory, self.localization, self.data, self.act_page)
+    @property
+    def url(self):
+        self._url = build_olx_url(self.search, self.category, self.subcategory, self.subsubcategory, self.localization, self.data, self.act_page)
+        return self._url
     
     def get_soup(self):
-        self.update_url()
+        #self.update_url()
         r = requests.get(self.url)
         try:
             soup = BeautifulSoup(r.content, 'html.parser')
