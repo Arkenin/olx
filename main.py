@@ -5,6 +5,10 @@ from domain.model import Offer
 
 def main():
 
+    h = OlxHandler('monitor')
+    h.get_offers()
+    print(h.offers[-1])
+
     data = {
         'filter_float_price:from':10,
         'filter_float_price:to':100,

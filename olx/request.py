@@ -2,6 +2,7 @@ from datetime import date
 import re
 
 import requests
+from domain.model import Offer
 from bs4 import BeautifulSoup
 
 
@@ -86,10 +87,11 @@ class OlxHandler():
 
     def get_offers(self):
         self.get_soup()
-        table = self._get_offers_from_olx_soup()
-        for offer in table:
-            offer_data = self._get_data_from_olx_offer(offer)
-            self.offers.append(offer_data)
+        table_soup = self._get_offers_from_olx_soup()
+        for offer_soup in table_soup:
+            offer_data = self._get_data_from_olx_offer(offer_soup)
+            offer = Offer(**offer_data)
+            self.offers.append(offer)
 
     def clear_offers(self):
         self.offers.clear()
