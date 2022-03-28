@@ -1,6 +1,11 @@
 import pytest
 import requests
-from olx.request import build_olx_url, get_olx_soup, get_offers_from_olx_soup, get_price_from_string
+from olx.request import *
+
+def test_olx_handler():
+    h = OlxHandler()
+    h.get_offers()
+    assert len(h.offers) > 0
 
 def test_build_olx_url():   
     data = {
@@ -28,7 +33,7 @@ def test_get_price_from_string():
     assert get_price_from_string("25.2  zł") == 25.2
     assert get_price_from_string("Za darmo") == 0
     assert get_price_from_string("ksngd3") == 3
-    assert get_price_from_string("35,3") == -1
+    assert get_price_from_string("15 000ZŁ") == 15000
+    assert get_price_from_string("35,3") == 35.3
     assert get_price_from_string("") == -1
     assert get_price_from_string("nic") == -1
-    assert get_price_from_string("5,566,566.5") == -1
