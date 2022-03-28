@@ -1,10 +1,12 @@
 import re
+import locale
 from datetime import date, datetime, timedelta
 
 import requests
 from domain.model import Offer
 from bs4 import BeautifulSoup
 
+locale.setlocale(locale.LC_ALL, 'pl_PL')
 
 def build_olx_url(search = '', category = '', subcategory = '', subsubcategory = '', localization = '', data = None, page = None):
     '''Function for building olx adress with selected categiries, filters and other settings'''
@@ -51,7 +53,7 @@ def get_date_from_olx_string(text):
     # The wrong date would be assigned in January if the offer was placed in december,
     # new year instead last year
     def time_to_numbers(text):
-        re_time = re.compile('(\d\d):(\d\d)')
+        re_time = re.compile(r'(\d\d):(\d\d)')
         hours, minutes = re_time.search(text).groups()
         hours = int(hours)
         minutes = int(minutes)
@@ -67,8 +69,11 @@ def get_date_from_olx_string(text):
         hours, minutes = time_to_numbers(text)
         out = datetime(tmp_date.year, tmp_date.month, tmp_date.day, hours, minutes)
     else:
-        out = datetime.strptime(text, "%d %b")
-        out = out.replace(year=date.today().year)
+        try:
+            out = datetime.strptime(text, "%d %b")
+            out = out.replace(year=date.today().year)
+        except ValueError as e:
+            print(str(e))
     return out
     
 
