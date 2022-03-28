@@ -5,7 +5,7 @@ from domain.model import Offer
 
 def main():
 
-    h = OlxHandler('monitor')
+    h = OlxHandler('monitor dell 19')
     h.get_offers()
     print(h.offers[-1])
 

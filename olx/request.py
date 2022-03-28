@@ -1,5 +1,5 @@
-from datetime import date
 import re
+from datetime import date, datetime, timedelta
 
 import requests
 from domain.model import Offer
@@ -44,6 +44,33 @@ def get_price_from_string(text):
     except:
         return -1
     return price
+
+def get_date_from_olx_string(text):
+    '''Funtion is creating a datetime variable from string from olx site'''
+    # TODO olx string doesnt't care about year and always shows month and day for each offer.
+    # The wrong date would be assigned in January if the offer was placed in december,
+    # new year instead last year
+    def time_to_numbers(text):
+        re_time = re.compile('(\d\d):(\d\d)')
+        hours, minutes = re_time.search(text).groups()
+        hours = int(hours)
+        minutes = int(minutes)
+        return hours, minutes
+        
+    out = None
+    if 'dzisiaj' in text:
+        tmp_date = date.today()
+        hours, minutes = time_to_numbers(text)
+        out = datetime(tmp_date.year, tmp_date.month, tmp_date.day, hours, minutes)
+    elif 'wczoraj' in text:
+        tmp_date = date.today() - timedelta (days = 1)
+        hours, minutes = time_to_numbers(text)
+        out = datetime(tmp_date.year, tmp_date.month, tmp_date.day, hours, minutes)
+    else:
+        out = datetime.strptime(text, "%d %b")
+        out = out.replace(year=date.today().year)
+    return out
+    
 
 
 class OlxHandler():
@@ -112,6 +139,7 @@ class OlxHandler():
 
     def _get_data_from_olx_offer(self, offer):    
         date = offer.find('i', {'data-icon':'clock'}).parent.text
+        date = get_date_from_olx_string(date)
         title = offer.strong.text
         try:
             price = offer.find('p', {'class':'price'}).text.strip()
