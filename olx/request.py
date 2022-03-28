@@ -100,7 +100,7 @@ class OlxHandler():
 
     def __repr__(self) -> str:
         return f"OlxHandler('{self.search}', '{self.category}', '{self.subcategory}', act_page = {self.act_page})"
-
+        
     @property
     def url(self):
         self._url = build_olx_url(self.search, self.category, self.subcategory, self.subsubcategory, self.localization, self.data, self.act_page)
