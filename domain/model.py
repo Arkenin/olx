@@ -3,7 +3,7 @@ from datetime import datetime
 class Offer():
 
     title: str
-    price: float
+    #price: float
     delivery: bool
     date: datetime.date
 
@@ -11,7 +11,7 @@ class Offer():
         self, title: str, delivery: bool = False, price: float = 0, date: datetime.date = None,
     ):
         self._title = title
-        self._price = price
+        self.price = price
         self.delivery = delivery
         self.date = date
     
@@ -33,6 +33,31 @@ class Offer():
     @property
     def price(self):
         return self._price
+
+    @price.setter
+    def price(self, var):
+        if var is None:
+            self._price = None
+        else:
+            try:
+                tmp = float(var)
+            except:
+                raise TypeError(f"excepted float or None instance, {type(var).__name__} found.")
+            if tmp < 0:
+                raise ValueError("price can't be below 0")
+            self._price = tmp
+
+    @property
+    def delivery(self):
+        return self._delivery
+
+    @delivery.setter
+    def delivery(self, var):
+        if isinstance(var, bool):
+            self._delivery = var
+        else:
+            raise TypeError(f"excepted bool instance, {type(var).__name__} found.")
+    
 
     def _members(self):
         members = [attr for attr in dir(type(self)) if not callable(getattr(Offer, attr)) and not attr.startswith("__")]
