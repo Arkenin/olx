@@ -8,7 +8,7 @@ class Offer():
     date: datetime.date
 
     def __init__(
-        self, title: str, delivery: bool = False, price: float = 0, date: datetime.date = None,
+        self, title: str, price: float = 0, delivery: bool = False,  date: datetime.date = None,
     ):
         self._title = title
         self.price = price
@@ -16,7 +16,7 @@ class Offer():
         self.date = date
     
     def __repr__(self):
-        return f'{self.date:12}\t{self.price:10}{self.delivery}\t{self.title}'
+        return f'Offer({self.title}, {self.price:.2f}, {self.delivery}, "{self.date}")'
 
     def __hash__(self):
         return hash((self.title, self.price))

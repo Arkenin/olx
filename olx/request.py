@@ -44,7 +44,7 @@ def get_price_from_string(text):
     try:
         price = float(pattern.search(text)[0])
     except:
-        return -1
+        return None
     return price
 
 def get_date_from_olx_string(text):
@@ -118,12 +118,28 @@ class OlxHandler():
         return soup
 
     def get_offers(self):
+        '''Method allow to save Offers to list. When flag break_on_same
+        is set to True, method stops adding offers to list when spots known offer.
+        It this case method returns 1'''
         self.get_soup()
         table_soup = self._get_offers_from_olx_soup()
         for offer_soup in table_soup:
             offer_data = self._get_data_from_olx_offer(offer_soup)
             offer = Offer(**offer_data)
-            self.offers.append(offer)
+            if offer not in self.offers:
+                self.offers.append(offer)
+
+
+    def get_more_offers(self, from_page = 1, to_page = 25, break_on_same = False):
+        if from_page == 1:
+            self.act_page = None
+        else:
+            self.act_page = from_page
+        self.get_offers()
+        to_page = min(to_page, self.max_page)
+        for p in range(from_page + 1, to_page + 1):
+            self.act_page = p
+            self.get_offers(break_on_same = break_on_same)
 
     def clear_offers(self):
         self.offers.clear()
@@ -131,7 +147,10 @@ class OlxHandler():
     def _get_offers_from_olx_soup(self):
         try:   
             offer_table = self.soup.find('table',{'summary':'Ogłoszenia'}).find_all('tr', {'class':'wrap'})
-            self.max_page = int(self.soup.find('a', {'data-cy':'page-link-last'}).text.strip())
+            try:
+                self.max_page = int(self.soup.find('a', {'data-cy':'page-link-last'}).text.strip())
+            except:
+                self.max_page = 0
             print("Znaleziono {} ofert na stronie: {}".format((len(offer_table)), self.url))
         except Exception as e:
             error_msg = f'Niespodziewana zawartość strony: {str(e)}'

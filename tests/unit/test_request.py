@@ -55,5 +55,5 @@ def test_get_price_from_string():
     assert get_price_from_string("ksngd3") == 3
     assert get_price_from_string("15 000ZŁ") == 15000
     assert get_price_from_string("35,3") == 35.3
-    assert get_price_from_string("") == -1
-    assert get_price_from_string("nic") == -1
+    assert get_price_from_string("") == None
+    assert get_price_from_string("nic") == None
