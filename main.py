@@ -7,11 +7,11 @@ def main():
 
     h = OlxHandler('monitor dell')
     h.get_offers()
-    h.get_more_offers(break_on_same=True, to_page=5)
+    h.get_more_offers(to_page=5)
 
     print(h.offers[-1])
     return
-    
+
 if __name__ == '__main__':          
     main()
 

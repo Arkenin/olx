@@ -7,3 +7,4 @@ RUN mkdir -p /code
 COPY *.py /code/
 WORKDIR /code
 
+CMD python main.py

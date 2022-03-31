@@ -130,7 +130,7 @@ class OlxHandler():
                 self.offers.append(offer)
 
 
-    def get_more_offers(self, from_page = 1, to_page = 25, break_on_same = False):
+    def get_more_offers(self, from_page = 1, to_page = 25):
         if from_page == 1:
             self.act_page = None
         else:
@@ -139,7 +139,7 @@ class OlxHandler():
         to_page = min(to_page, self.max_page)
         for p in range(from_page + 1, to_page + 1):
             self.act_page = p
-            self.get_offers(break_on_same = break_on_same)
+            self.get_offers()
 
     def clear_offers(self):
         self.offers.clear()
