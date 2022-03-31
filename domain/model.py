@@ -43,7 +43,7 @@ class Offer():
                 tmp = float(var)
             except:
                 raise TypeError(f"excepted float or None instance, {type(var).__name__} found.")
-            if tmp < 0:
+            if tmp < 0 and tmp != None:
                 raise ValueError("price can't be below 0")
             self._price = tmp
 

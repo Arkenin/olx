@@ -4,13 +4,12 @@ from domain.model import Offer
 from datetime import datetime
 def test_offer_creating():
     Offer("Produkt")
-    Offer("Produkt", False, 20)
-    Offer("Produkt", False, 20)
+    Offer("Produkt", 20, False)
     with pytest.raises(TypeError) as e_info:
         Offer("Produkt", 2, 20)
     
     with pytest.raises(ValueError) as e_info:
-        Offer("Produkt", False, -3)
+        Offer("Produkt", -3, False)
 
     
 

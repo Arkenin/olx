@@ -169,7 +169,7 @@ class OlxHandler():
             price = offer.find('p', {'class':'price'}).text.strip()
             price = get_price_from_string(price)
         except:
-            price = -1
+            price = None
 
         if offer.find('div', {'class':'olx-delivery-icon'}):
             delivery = True
