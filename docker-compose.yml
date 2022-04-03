@@ -12,3 +12,10 @@ services:
     ports:
       - "9999:80"
 
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=olx
+      - POSTGRES_PASSWORD=abc123
+    ports:
+      - "7900:5432"
