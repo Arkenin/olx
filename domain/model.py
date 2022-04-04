@@ -24,7 +24,7 @@ class Offer():
     def __eq__(self, other):
         if not isinstance(other, Offer):
             return False
-        return other.title == self.title and other.price == self.price
+        return other._title == self._title and other.price == self.price
 
     @property
     def title(self):
