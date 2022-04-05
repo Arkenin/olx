@@ -40,7 +40,6 @@ def postgres_db():
     engine = create_engine(config.get_postgres_uri())
     wait_for_postgres_to_come_up(engine)
     metadata.create_all(engine)
-    print("so far so good \n")
     return engine
 
 @pytest.fixture
