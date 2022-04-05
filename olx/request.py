@@ -70,6 +70,7 @@ def get_date_from_olx_string(text):
         out = datetime(tmp_date.year, tmp_date.month, tmp_date.day, hours, minutes)
     else:
         try:
+            text = text.replace('  ', ' ')
             out = datetime.strptime(text, "%d %b")
             out = out.replace(year=date.today().year)
         except ValueError as e:

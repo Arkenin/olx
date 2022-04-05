@@ -36,6 +36,7 @@ def test_get_date_from_olx_string():
     yesterday = date.today() - timedelta (days = 1)
     assert get_date_from_olx_string("23 mar") == datetime(day = 23, month = 3, year = current_year)
     assert get_date_from_olx_string("23 lut") == datetime(day = 23, month = 2, year = current_year)
+    assert get_date_from_olx_string("3  kwi") == datetime(day = 3, month = 4, year = current_year)
     assert get_date_from_olx_string("wczoraj o 01:23") == datetime(day = yesterday.day,
                                                                      month = yesterday.month,
                                                                      year = yesterday.year,

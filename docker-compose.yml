@@ -15,6 +15,8 @@ services:
       - ./:/code/
     ports:
       - "9999:80"
+    tty: true
+
 
   postgres:
     image: postgres:9.6
