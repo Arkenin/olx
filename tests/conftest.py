@@ -12,14 +12,14 @@ from adapters.orm import metadata, start_mappers
 import config
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture()
 def in_memory_db():
     engine = create_engine('sqlite:///:memory:')
     metadata.create_all(engine)
     return engine
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture()
 def session(in_memory_db):
     start_mappers()
     yield sessionmaker(bind=in_memory_db)()

@@ -12,5 +12,14 @@ def test_offer_mapper_can_load_lines(session):
         model.Offer("Monitor", 45.30, True, datetime(2011, 4, 11)),
         model.Offer("Klucz", 45.30, True, datetime(2011, 4, 11)),
     ]
-    assert True
     assert session.query(model.Offer).all() == expected
+
+def test_offer_mapper_can_save(session):
+    nice_offer = model.Offer("RTX3060", 250, True, datetime(2022, 4, 11))
+    session.add(nice_offer)
+    session.commit()
+
+    rows = list(session.execute('SELECT title, price, delivery, date FROM "offers"'))
+    assert rows == [('RTX3060', 250.0, 1, '2022-04-11 00:00:00.000000')]
+
+
