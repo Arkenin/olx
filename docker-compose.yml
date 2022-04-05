@@ -5,8 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    depends_on:
+      - postgres
     environment:
       - PYTHONDONTWRITEBYTECODE=1
+      - DB_HOST=postgres
+      - DB_PASSWORD=abc123
     volumes:
       - ./:/code/
     ports:

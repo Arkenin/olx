@@ -8,16 +8,19 @@ from domain.model import Offer
 from adapters import orm
 from adapters.orm import metadata
 
-def main():
+def get_session():
     engine = create_engine(config.get_postgres_uri())
     metadata.create_all(engine)
     orm.start_mappers()
     get_session = sessionmaker(bind=engine)
+    return get_session()
+
+def main():
     session = get_session()
 
     h = OlxHandler('monitor dell')
     h.get_offers()
-    #h.get_more_offers(to_page=5)
+    h.get_more_offers(to_page=3)
 
     print(h.offers[-1])
     o1 = h.offers[-1]
