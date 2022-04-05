@@ -7,8 +7,9 @@ from olx.request import *
 from domain.model import Offer
 from adapters import orm
 from adapters.orm import metadata
+from adapters.session import get_session
 
-def get_session():
+def get_session__():
     engine = create_engine(config.get_postgres_uri())
     metadata.create_all(engine)
     orm.start_mappers()
